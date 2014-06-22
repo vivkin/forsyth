@@ -36,7 +36,15 @@
 
 typedef uint16_t ForsythVertexIndexType;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int forsythReorderIndices(ForsythVertexIndexType *outIndices, const ForsythVertexIndexType *indices, int nTriangles, int nVertices);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // FORSYTH_H
 
@@ -45,6 +53,10 @@ int forsythReorderIndices(ForsythVertexIndexType *outIndices, const ForsythVerte
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 // Set these to adjust the performance and result quality
 #define FORSYTH_VERTEX_CACHE_SIZE 24
@@ -140,7 +152,7 @@ int forsythReorderIndices(ForsythVertexIndexType *outIndices, const ForsythVerte
 		init = 0;
 	}
 
-	ForsythAdjacencyType *numActiveTris = malloc(sizeof(ForsythAdjacencyType) * nVertices);
+	ForsythAdjacencyType *numActiveTris = (ForsythAdjacencyType *)malloc(sizeof(ForsythAdjacencyType) * nVertices);
 	memset(numActiveTris, 0, sizeof(ForsythAdjacencyType) * nVertices);
 
 	// First scan over the vertex data, count the total number of
@@ -156,13 +168,13 @@ int forsythReorderIndices(ForsythVertexIndexType *outIndices, const ForsythVerte
 	}
 
 	// Allocate the rest of the arrays
-	ForsythArrayIndexType *offsets = malloc(sizeof(ForsythArrayIndexType) * nVertices);
-	ForsythScoreType *lastScore = malloc(sizeof(ForsythScoreType) * nVertices);
-	ForsythCachePosType *cacheTag = malloc(sizeof(ForsythCachePosType) * nVertices);
+	ForsythArrayIndexType *offsets = (ForsythArrayIndexType *)malloc(sizeof(ForsythArrayIndexType) * nVertices);
+	ForsythScoreType *lastScore = (ForsythScoreType *)malloc(sizeof(ForsythScoreType) * nVertices);
+	ForsythCachePosType *cacheTag = (ForsythCachePosType *)malloc(sizeof(ForsythCachePosType) * nVertices);
 
-	uint8_t *triangleAdded = malloc((nTriangles + 7) / 8);
-	ForsythScoreType *triangleScore = malloc(sizeof(ForsythScoreType) * nTriangles);
-	ForsythTriangleIndexType *triangleIndices = malloc(sizeof(ForsythTriangleIndexType) * 3 * nTriangles);
+	uint8_t *triangleAdded = (uint8_t *)malloc((nTriangles + 7) / 8);
+	ForsythScoreType *triangleScore = (ForsythScoreType *)malloc(sizeof(ForsythScoreType) * nTriangles);
+	ForsythTriangleIndexType *triangleIndices = (ForsythTriangleIndexType *)malloc(sizeof(ForsythTriangleIndexType) * 3 * nTriangles);
 	memset(triangleAdded, 0, sizeof(uint8_t) * ((nTriangles + 7) / 8));
 	memset(triangleScore, 0, sizeof(ForsythScoreType) * nTriangles);
 	memset(triangleIndices, 0, sizeof(ForsythTriangleIndexType) * 3 * nTriangles);
@@ -206,7 +218,7 @@ int forsythReorderIndices(ForsythVertexIndexType *outIndices, const ForsythVerte
 	}
 
 	// Allocate the output array
-	ForsythTriangleIndexType *outTriangles = malloc(sizeof(ForsythTriangleIndexType) * nTriangles);
+	ForsythTriangleIndexType *outTriangles = (ForsythTriangleIndexType *)malloc(sizeof(ForsythTriangleIndexType) * nTriangles);
 	int outPos = 0;
 
 	// Initialize the cache
@@ -325,5 +337,9 @@ int forsythReorderIndices(ForsythVertexIndexType *outIndices, const ForsythVerte
 
 	return 1;
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //FORSYTH_IMPLEMENTATION
