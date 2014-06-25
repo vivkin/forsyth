@@ -40,7 +40,7 @@ typedef uint16_t ForsythVertexIndexType;
 extern "C" {
 #endif
 
-int forsythReorderIndices(ForsythVertexIndexType *outIndices, const ForsythVertexIndexType *indices, int nTriangles, int nVertices);
+ForsythVertexIndexType *forsythReorderIndices(ForsythVertexIndexType *outIndices, const ForsythVertexIndexType *indices, int nTriangles, int nVertices);
 
 #ifdef __cplusplus
 }
@@ -142,7 +142,7 @@ static ForsythScoreType forsythFindVertexScore(int numActiveTris, int cachePosit
 }
 
 // The main reordering function
-int forsythReorderIndices(ForsythVertexIndexType *outIndices, const ForsythVertexIndexType *indices, int nTriangles, int nVertices) {
+ForsythVertexIndexType *forsythReorderIndices(ForsythVertexIndexType *outIndices, const ForsythVertexIndexType *indices, int nTriangles, int nVertices) {
     static int init = 1;
     if (init) {
         forsythInit();
@@ -159,7 +159,7 @@ int forsythReorderIndices(ForsythVertexIndexType *outIndices, const ForsythVerte
             // Unsupported mesh,
             // vertex shared by too many triangles
             free(numActiveTris);
-            return 0;
+            return NULL;
         }
         numActiveTris[indices[i]]++;
     }
@@ -332,7 +332,7 @@ int forsythReorderIndices(ForsythVertexIndexType *outIndices, const ForsythVerte
     free(triangleScore);
     free(outTriangles);
 
-    return 1;
+    return outIndices;
 }
 
 #ifdef __cplusplus
