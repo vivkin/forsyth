@@ -241,20 +241,22 @@ ForsythVertexIndexType *forsythReorderIndices(ForsythVertexIndexType *outIndices
             int endpos = cacheTag[v];
             if (endpos < 0)
                 endpos = FORSYTH_VERTEX_CACHE_SIZE + i;
-            // Move all cache entries from the previous position
-            // in the cache to the new target position (i) one
-            // step backwards
-            for (int j = endpos; j > i; j--) {
-                cache[j] = cache[j - 1];
-                // If this cache slot contains a real
-                // vertex, update its cache tag
-                if (cache[j] >= 0)
-                    cacheTag[cache[j]]++;
+            if (endpos > i) {
+                // Move all cache entries from the previous position
+                // in the cache to the new target position (i) one
+                // step backwards
+                for (int j = endpos; j > i; j--) {
+                    cache[j] = cache[j - 1];
+                    // If this cache slot contains a real
+                    // vertex, update its cache tag
+                    if (cache[j] >= 0)
+                        cacheTag[cache[j]]++;
+                }
+                // Insert the current vertex into its new target
+                // slot
+                cache[i] = v;
+                cacheTag[v] = i;
             }
-            // Insert the current vertex into its new target
-            // slot
-            cache[i] = v;
-            cacheTag[v] = i;
 
             // Find the current triangle in the list of active
             // triangles and remove it (moving the last
